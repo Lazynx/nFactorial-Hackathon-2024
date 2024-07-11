@@ -1,17 +1,8 @@
 import { Router } from 'express'
-import multer from 'multer'
-import GithubController from './github-controller'
+import GitHubController from './github-controller'
 
 const githubRouter = Router()
-const storage = multer.memoryStorage()
-const upload = multer({ storage })
 
-const githubController = new GithubController()
-
-githubRouter.post(
-  '/upload',
-  upload.single('excel'),
-  githubController.uploadXlsx
-)
+githubRouter.post('/check-repo', GitHubController.checkRepo)
 
 export default githubRouter
