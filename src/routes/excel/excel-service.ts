@@ -121,13 +121,24 @@ class ExcelService {
       await this.delay(1000) // Delay of 1 second between requests
     }
 
-    // Add responses to the filtered output
+    // Add responses and normalize GitHub URLs to the filtered output
     const responseData = filteredOutput.map((item, index) => {
-      return { ...item, 'Gemini Response': responses[index] }
+      const githubUrl = this.normalizeGitHubUrl(item['Ссылка на GitHub'])
+      return {
+        ...item,
+        'Gemini Response': responses[index],
+        'Normalized GitHub URL': githubUrl
+      }
     })
 
     console.log('Response data:', responseData)
     return responseData
+  }
+
+  private normalizeGitHubUrl(url: string): string {
+    if (!url) return ''
+    if (url.startsWith('http')) return url
+    return `https://github.com/${url}`
   }
 
   private async sendToGemini(data: any): Promise<string> {
